@@ -1,0 +1,120 @@
+﻿@model IdentityTask.ViewModel.RegisterViewModel
+
+@{
+    var user=ViewData["user"] as List<ApplicationUser>;
+
+    string mode = ViewData["mode"] as string;
+    string _action = "";
+    if (mode == "create")
+        _action = "Register";
+    else
+        _action = "update";
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="@_action" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            @if (mode == "create")
+            {
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Confirm" class="control-label"></label>
+                    <input asp-for="Confirm" class="form-control" />
+                    <span asp-validation-for="Confirm" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="Password" class="form-control"  value="King12345$%"/>
+                <input type="hidden" asp-for="Confirm" class="form-control"   value="King12345$%"/>
+
+
+
+            }
+
+            <div class="form-group">
+                <label asp-for="Job" class="control-label"></label>
+                <input asp-for="Job" class="form-control" />
+                <span asp-validation-for="Job" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="file" class="form-control" id="fileInput" />
+            </div>
+
+            <div class="form-group">
+                <select asp-for="MentorId" class="form-control">
+                    <option value="@null">----Select Your Menor----</option>
+                    @foreach (var item in user)
+                    {
+                        if (mode == "update")
+                        {
+                            if (Model.MentorId == item.Id)
+                            {
+                                <option value="@item.Id" selected>@item.UserName</option>
+                            }
+                            <option value="@item.Id">@item.UserName</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.UserName</option>
+
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        @if (mode == "create")
+        {
+            <img style="margin-top:50px;width:500px;height:300px;display:none" id="output" />
+        }
+        else
+        { 
+           <img src="~/ProfileImage/@ViewBag.img" style="margin-top:50px;width:500px;height:300px" id="output" />
+        }
+        
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+
+        function displayImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function () {
+                const imageSrc = reader.result;
+                var element = document.querySelector("#output");
+                element.src = imageSrc
+                element.style.display = "inline";
+            };
+            reader.readAsDataURL(file);
+        }
+        document.querySelector("#fileInput").addEventListener("change", displayImage);
+
+
+    </script>
+
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
