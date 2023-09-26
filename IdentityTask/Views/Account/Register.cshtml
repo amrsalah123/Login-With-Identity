@@ -57,18 +57,17 @@
                     <option value="@null">----Select Your Menor----</option>
                     @foreach (var item in user)
                     {
-                        if (mode == "update")
+                        @if (item.Email != Model.Email)
                         {
-                            if (Model.MentorId == item.Id)
+                            if (item.Id == Model.MentorId)
                             {
-                                <option value="@item.Id" selected>@item.UserName</option>
+                                <option value="@item.Id" selected>@item.Email</option>
                             }
-                            <option value="@item.Id">@item.UserName</option>
-                        }
-                        else
-                        {
-                            <option value="@item.Id">@item.UserName</option>
+                            else
+                            {
+                                <option value="@item.Id">@item.Email</option>
 
+                            }
                         }
                     }
                 </select>
