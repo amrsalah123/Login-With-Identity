@@ -28,10 +28,11 @@ namespace IdentityTask.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            RegisterViewModel v = new RegisterViewModel();
             ViewData["mode"] = "create";
             var All_User = _userManager.Users.ToList();
             ViewData["user"] = All_User;
-            return View();
+            return View(v);
         }
      
         [HttpPost]
